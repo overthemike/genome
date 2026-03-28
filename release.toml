@@ -1,0 +1,6 @@
+pre-release-hooks = ["node scripts/sync-release.js"]
+post-release-hooks = ["make publish-npm"]
+pre-release-replacements = [
+  { file = "README.md", search = "genome-rs = \"[^\"]+\"", replace = "genome-rs = \"{{version}}\"" },
+  { file = "README.md", search = "npm install genome@[^\\s\"]+", replace = "npm install genome@{{version}}" },
+]
