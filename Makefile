@@ -56,7 +56,6 @@ release-major:
 
 ## Publish to npm only
 publish-npm: build-wasm
-	node scripts/fix-pkg.js
 	wasm-pack publish --access public
 
 ## Publish to crates.io only

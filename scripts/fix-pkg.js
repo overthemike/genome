@@ -12,8 +12,6 @@ if (!fs.existsSync(pkgPath)) {
 	process.exit(1);
 }
 
-// ── Rename files ──────────────────────────────────────────────────────────────
-
 const renames = [
 	["genome_rs.js", "genome.js"],
 	["genome_rs_bg.wasm", "genome_bg.wasm"],
@@ -31,9 +29,6 @@ for (const [from, to] of renames) {
 	}
 }
 
-// ── Fix internal references inside the renamed files ─────────────────────────
-// The js glue file references genome_rs_bg.wasm by name — update those too.
-
 const filesToPatch = ["genome.js", "genome.d.ts", "genome_bg.wasm.d.ts"];
 
 for (const file of filesToPatch) {
@@ -46,8 +41,6 @@ for (const file of filesToPatch) {
 	fs.writeFileSync(filePath, patched);
 	console.log(`✓ patched references in ${file}`);
 }
-
-// ── Merge package.json metadata ───────────────────────────────────────────────
 
 const generated = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
 const template = JSON.parse(fs.readFileSync(templatePath, "utf8"));
@@ -71,32 +64,32 @@ for (const field of MERGE_FIELDS) {
 	}
 }
 
-// Fix file references in package.json itself
 for (const key of ["main", "module", "types"]) {
 	if (generated[key]) {
 		generated[key] = generated[key].replaceAll("genome_rs", "genome");
 	}
 }
 
-// Fix exports map
 if (generated.exports) {
-	const exportsStr = JSON.stringify(generated.exports).replaceAll(
-		"genome_rs",
-		"genome",
+	generated.exports = JSON.parse(
+		JSON.stringify(generated.exports).replaceAll("genome_rs", "genome"),
 	);
-	generated.exports = JSON.parse(exportsStr);
 }
 
-// Fix files array
 if (generated.files) {
 	generated.files = generated.files.map((f) =>
 		f.replaceAll("genome_rs", "genome"),
 	);
 }
 
-// Fix sideEffects array
 if (Array.isArray(generated.sideEffects)) {
 	generated.sideEffects = generated.sideEffects.map((f) =>
 		f.replaceAll("genome_rs", "genome"),
 	);
 }
+
+// ← this was missing — nothing was ever saved
+fs.writeFileSync(pkgPath, JSON.stringify(generated, null, 2) + "\n");
+console.log(
+	`✓ pkg/package.json saved as "${generated.name}@${generated.version}"`,
+);
