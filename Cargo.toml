@@ -1,6 +1,6 @@
 [package]
 name = "genome-rs"
-version = "1.0.9"
+version = "1.0.10"
 edition = "2021"
 description = "Deterministic type based JSON style object hash generation"
 authors = ["Michael Sweeney <overthemike@gmail.com>"]
