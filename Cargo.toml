@@ -1,0 +1,36 @@
+[package]
+name = "genome-rs"
+version = "1.0.2"
+edition = "2021"
+description = "Deterministic type based JSON style object hash generation"
+authors = ["Michael Sweeney <overthemike@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/overthemike/genome"
+homepage = "https://github.com/overthemike/genome"
+keywords = ["structure", "shape", "id", "identifier", "generator",
+ "hash", "fingerprint", "signature", "genome", "schema",
+ "compare", "diff", "deduplication", "memoization", "caching",
+ "serialization", "object", "json", "deterministic", "unique", "type", "wasm"]
+categories = ["wasm", "algorithms"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+serde_json = { version = "1", default-features = false, features = ["alloc"] }
+wasm-bindgen = { version = "0.2", optional = true }
+
+[features]
+wasm = ["wasm-bindgen"]
+
+[dev-dependencies]
+serde_json = { version = "1", features = ["std"] }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[profile.release-wasm]
+inherits = "release"
+opt-level = "z"
