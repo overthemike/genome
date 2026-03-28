@@ -43,14 +43,17 @@ release: test build
 ## Bump patch version and release to both registries
 release-patch:
 	cargo release patch --execute
+	make publish-npm
 
 ## Bump minor version and release to both registries
 release-minor:
 	cargo release minor --execute
+	make publish-npm
 
 ## Bump major version and release to both registries
 release-major:
 	cargo release major --execute
+	make publish-npm
 
 ## Publish to npm only
 publish-npm: build-wasm
