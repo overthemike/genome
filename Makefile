@@ -40,6 +40,18 @@ release: test build
 	cargo publish
 	wasm-pack publish --access public
 
+## Bump patch version and release to both registries
+release-patch:
+	cargo release patch --execute
+
+## Bump minor version and release to both registries
+release-minor:
+	cargo release minor --execute
+
+## Bump major version and release to both registries
+release-major:
+	cargo release major --execute
+
 ## Publish to npm only
 publish-npm: build-wasm
 	wasm-pack publish --access public

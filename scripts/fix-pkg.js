@@ -1,13 +1,10 @@
 #!/usr/bin/env node
-// Merges root package.json metadata into the wasm-pack generated pkg/package.json.
-// wasm-pack uses the crate name (genome-rs) for the npm name by default —
-// this script overwrites it with the fields from our package.json template.
-
 const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
-const pkgPath = path.join(root, "pkg", "package.json");
+const pkgDir = path.join(root, "pkg");
+const pkgPath = path.join(pkgDir, "package.json");
 const templatePath = path.join(root, "package.json");
 
 if (!fs.existsSync(pkgPath)) {
@@ -15,12 +12,45 @@ if (!fs.existsSync(pkgPath)) {
 	process.exit(1);
 }
 
+// ── Rename files ──────────────────────────────────────────────────────────────
+
+const renames = [
+	["genome_rs.js", "genome.js"],
+	["genome_rs_bg.wasm", "genome_bg.wasm"],
+	["genome_rs_bg.wasm.d.ts", "genome_bg.wasm.d.ts"],
+	["genome_rs.d.ts", "genome.d.ts"],
+];
+
+for (const [from, to] of renames) {
+	const fromPath = path.join(pkgDir, from);
+	const toPath = path.join(pkgDir, to);
+	if (fs.existsSync(fromPath)) {
+		fs.renameSync(fromPath, toPath);
+		console.log(`✓ renamed ${from} → ${to}`);
+	}
+}
+
+// ── Fix internal references inside the renamed files ─────────────────────────
+// The js glue file references genome_rs_bg.wasm by name — update those too.
+
+const filesToPatch = ["genome.js", "genome.d.ts", "genome_bg.wasm.d.ts"];
+
+for (const file of filesToPatch) {
+	const filePath = path.join(pkgDir, file);
+	if (!fs.existsSync(filePath)) continue;
+	const content = fs.readFileSync(filePath, "utf8");
+	const patched = content
+		.replaceAll("genome_rs_bg", "genome_bg")
+		.replaceAll("genome_rs", "genome");
+	fs.writeFileSync(filePath, patched);
+	console.log(`✓ patched references in ${file}`);
+}
+
+// ── Merge package.json metadata ───────────────────────────────────────────────
+
 const generated = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
 const template = JSON.parse(fs.readFileSync(templatePath, "utf8"));
 
-// Fields to copy from template into the generated package.json.
-// We don't overwrite files, main, module, types etc since wasm-pack
-// sets those correctly for the WASM output.
 const MERGE_FIELDS = [
 	"name",
 	"version",
@@ -40,5 +70,21 @@ for (const field of MERGE_FIELDS) {
 	}
 }
 
+// Fix file references in package.json itself
+for (const key of ["main", "module", "types"]) {
+	if (generated[key]) {
+		generated[key] = generated[key].replaceAll("genome_rs", "genome");
+	}
+}
+
+// Fix exports map
+if (generated.exports) {
+	const exportsStr = JSON.stringify(generated.exports).replaceAll(
+		"genome_rs",
+		"genome",
+	);
+	generated.exports = JSON.parse(exportsStr);
+}
+
 fs.writeFileSync(pkgPath, `${JSON.stringify(generated, null, 2)}\n`);
-console.log(`✓ pkg/package.json name set to "${generated.name}"`);
+console.log(`✓ pkg/package.json updated, name = "${generated.name}"`);
