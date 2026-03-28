@@ -37,8 +37,7 @@ test-verbose:
 
 ## Build, then publish to both crates.io and npm
 release: test build
-	cargo publish
-	wasm-pack publish --access public
+	node scripts/release.js
 
 ## Bump patch version and release to both registries
 release-patch:
