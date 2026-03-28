@@ -7,10 +7,7 @@ authors = ["Michael Sweeney <overthemike@gmail.com>"]
 license = "MIT"
 repository = "https://github.com/overthemike/genome"
 homepage = "https://github.com/overthemike/genome"
-keywords = ["structure", "shape", "id", "identifier", "generator",
- "hash", "fingerprint", "signature", "genome", "schema",
- "compare", "diff", "deduplication", "memoization", "caching",
- "serialization", "object", "json", "deterministic", "unique", "type", "wasm"]
+keywords = ["wasm", "hash", "json", "structure", "signature"]
 categories = ["wasm", "algorithms"]
 
 [lib]
