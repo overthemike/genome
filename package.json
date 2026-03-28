@@ -2,6 +2,10 @@
 	"name": "genome",
 	"description": "Deterministic structure ID generation for JavaScript objects using hierarchical hashing and collision-resistant algorithms",
 	"author": "Michael Sweeney <overthemike@gmail.com>",
+	"license": "MIT",
+	"repository": "https://github.com/overthemike/genome.git",
+	"bugs": "https://github.com/overthemike/genome/issues",
+	"homepage": "https://github.com/overthemike/genome",
 	"keywords": [
 		"structure",
 		"shape",
