@@ -1,0 +1,31 @@
+{
+	"name": "genome",
+	"description": "Deterministic structure ID generation for JavaScript objects using hierarchical hashing and collision-resistant algorithms",
+	"author": "Michael Sweeney <overthemike@gmail.com>",
+	"keywords": [
+		"structure",
+		"shape",
+		"id",
+		"identifier",
+		"generator",
+		"hash",
+		"fingerprint",
+		"signature",
+		"genome",
+		"schema",
+		"compare",
+		"diff",
+		"deduplication",
+		"memoization",
+		"caching",
+		"serialization",
+		"object",
+		"json",
+		"deterministic",
+		"unique",
+		"synpatico",
+		"type",
+		"wasm",
+		"rust"
+	]
+}

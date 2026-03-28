@@ -20,7 +20,7 @@ build-native:
 
 ## Build WASM + npm package
 build-wasm:
-	wasm-pack build --target $(WASM_TARGET) --features wasm
+	wasm-pack build --target $(WASM_TARGET) --features wasm --package-json package.json
 
 # ── Test ──────────────────────────────────────────────────────────────────────
 
