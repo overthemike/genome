@@ -19,6 +19,7 @@ const renames = [
 	["genome_rs_bg.wasm", "genome_bg.wasm"],
 	["genome_rs_bg.wasm.d.ts", "genome_bg.wasm.d.ts"],
 	["genome_rs.d.ts", "genome.d.ts"],
+	["genome_rs_bg.js", "genome_bg.js"],
 ];
 
 for (const [from, to] of renames) {
