@@ -36,8 +36,8 @@ test-verbose:
 # ── Release ───────────────────────────────────────────────────────────────────
 
 ## Build, then publish to both crates.io and npm
-release: test build
-	node scripts/release.js
+## release: test build
+##		node scripts/release.j
 
 ## Bump patch version and release to both registries
 release-patch:
@@ -56,6 +56,7 @@ release-major:
 
 ## Publish to npm only
 publish-npm: build-wasm
+	node scripts/fix-pkg.js
 	node scripts/release.js
 	wasm-pack publish --access public
 
