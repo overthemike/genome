@@ -86,5 +86,16 @@ if (generated.exports) {
 	generated.exports = JSON.parse(exportsStr);
 }
 
-fs.writeFileSync(pkgPath, `${JSON.stringify(generated, null, 2)}\n`);
-console.log(`✓ pkg/package.json updated, name = "${generated.name}"`);
+// Fix files array
+if (generated.files) {
+	generated.files = generated.files.map((f) =>
+		f.replaceAll("genome_rs", "genome"),
+	);
+}
+
+// Fix sideEffects array
+if (Array.isArray(generated.sideEffects)) {
+	generated.sideEffects = generated.sideEffects.map((f) =>
+		f.replaceAll("genome_rs", "genome"),
+	);
+}
